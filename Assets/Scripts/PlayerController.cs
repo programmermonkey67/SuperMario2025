@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
         jumpAction = InputSystem.actions["Jump"];
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
         transform.position = startPosition;  
     }
 
-    // Update is called once per frame
+    
     void Update()
     {
         moveDirection = moveAction.ReadValue<Vector2>();

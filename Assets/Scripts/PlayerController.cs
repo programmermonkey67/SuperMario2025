@@ -9,14 +9,16 @@ public class PlayerController : MonoBehaviour
     public float jumpForce = 10;
     public float bounceForce = 4;
     public int direction = 1;
-
+    private AudioSource _audioSource;
+    private BoxCollider2D _boxCollider;
     public Vector3 initialPosition;
     public Vector3 finalPosition;
 
     private InputAction moveAction;
     public Vector2 moveDirection;
     private InputAction jumpAction;
-
+    public AudioClip deathSFX;
+    public AudioClip jumpSFX;
     public Rigidbody2D rBody2D;
     private SpriteRenderer render;
     private GroundSensor sensor;
@@ -28,6 +30,7 @@ public class PlayerController : MonoBehaviour
         render = GetComponent<SpriteRenderer>();
         sensor = GetComponentInChildren<GroundSensor>();
         animator = GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
 
         moveAction = InputSystem.actions["Move"];
         jumpAction = InputSystem.actions["Jump"];
@@ -76,6 +79,7 @@ public class PlayerController : MonoBehaviour
         if(jumpAction.WasPressedThisFrame() && sensor.isGrounded)
         {
             rBody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            _audioSource.PlayOneShot(jumpSFX);
         }
 
         animator.SetBool("IsJumping", !sensor.isGrounded);
@@ -89,5 +93,19 @@ public class PlayerController : MonoBehaviour
     public void Bounce()
     {
         rBody2D.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
+       } 
+    public void Mariodeath()
+    {    
+        _audioSource.PlayOneShot(deathSFX);
+
+        movementSpeed = 0;
+
+        _boxCollider.enabled = false;
+
+        Destroy(gameObject, 1);
+
+        //_audioSource.clip = deathSFX;
+        //_audioSource.Play();   
+    
     }
 }

@@ -18,7 +18,7 @@ void Start ()
 
 void StartBGM() 
 {
-   // _audioSource.loop = true;
+    //_audioSource.loop = true;
     _audioSource.clip = gameMusic;
     _audioSource.Play();
 

@@ -4,7 +4,7 @@ public class BGMManager : MonoBehaviour
 {
 public AudioClip gameMusic;
 
-private AudioSource audioSource;
+private AudioSource _audioSource;
 
 void Awake () 
 {

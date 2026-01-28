@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 
     public float movementSpeed = 5f;
     public float jumpForce = 10;
+    public float bounceForce = 4;
     public int direction = 1;
 
     public Vector3 initialPosition;
@@ -19,18 +20,20 @@ public class PlayerController : MonoBehaviour
     public Rigidbody2D rBody2D;
     private SpriteRenderer render;
     private GroundSensor sensor;
+    private Animator animator;
 
     void Awake()
     {
         rBody2D = GetComponent<Rigidbody2D>();
         render = GetComponent<SpriteRenderer>();
         sensor = GetComponentInChildren<GroundSensor>();
+        animator = GetComponent<Animator>();
 
         moveAction = InputSystem.actions["Move"];
         jumpAction = InputSystem.actions["Jump"];
     }
 
-    
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
@@ -38,7 +41,7 @@ public class PlayerController : MonoBehaviour
         transform.position = startPosition;  
     }
 
-    
+    // Update is called once per frame
     void Update()
     {
         moveDirection = moveAction.ReadValue<Vector2>();
@@ -57,10 +60,16 @@ public class PlayerController : MonoBehaviour
         if(moveDirection.x > 0)
         {
             render.flipX = false;
+            animator.SetBool("IsRunning", true);
         }
         else if(moveDirection.x < 0)
         {
             render.flipX = true;
+            animator.SetBool("IsRunning", true);
+        }
+        else
+        {
+            animator.SetBool("IsRunning", false);
         }
         
 
@@ -68,10 +77,17 @@ public class PlayerController : MonoBehaviour
         {
             rBody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
+
+        animator.SetBool("IsJumping", !sensor.isGrounded);
     }
 
     void FixedUpdate()
     {
         rBody2D.linearVelocity = new Vector2(moveDirection.x * movementSpeed, rBody2D.linearVelocity.y);
+    }
+
+    public void Bounce()
+    {
+        rBody2D.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
     }
 }

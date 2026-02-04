@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Tuberias
   - Enemies
+  - 'Moneda '
   layers:
   - Default
   - TransparentFX

@@ -52,6 +52,14 @@ public class Goomba : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter2D(BoxCollider2D collider2D)
+    {
+        if(collider2D.gameObject.CompareTag("Tuberias"))
+        {
+            direction *= -1;
+        }
+    }
+    
     public void GoombaDeath()
     {
         _gameManager.AddKill();

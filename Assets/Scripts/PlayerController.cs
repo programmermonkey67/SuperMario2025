@@ -23,7 +23,9 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer render;
     private GroundSensor sensor;
     private Animator animator;
-
+    private BGMManager _bgmManagerScript;
+    public AudioClip win;
+}
     void Awake()
     {
         rBody2D = GetComponent<Rigidbody2D>();
@@ -48,17 +50,6 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         moveDirection = moveAction.ReadValue<Vector2>();
-
-        //transform.position = new Vector3(transform.position.x + direction * movementSpeed * Time.deltaTime, transform.position.y, transform.position.z);
-
-        //transform.Translate(new Vector3(direction * movementSpeed * Time.deltaTime, 0, 0));
-        
-        //transform.position = Vector2.MoveTowards(transform.position, finalPosition, movementSpeed * Time.deltaTime);
-
-        //transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x + direction, transform.position.y), movementSpeed * Time.deltaTime);
-
-    
-        //transform.position = new Vector3(transform.position.x + moveDirection.x * movementSpeed * Time.deltaTime, transform.position.y, transform.position.z);
 
         if(moveDirection.x > 0)
         {
@@ -90,22 +81,31 @@ public class PlayerController : MonoBehaviour
         rBody2D.linearVelocity = new Vector2(moveDirection.x * movementSpeed, rBody2D.linearVelocity.y);
     }
 
-    public void Bounce()
+    private void Bounce()
     {
         rBody2D.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
        } 
+
     public void Mariodeath()
-    {    
+    {
+        _bgmManagerScript.StopBGM();
+        
+        animator.SetBool("IsDeath", true);
+
         _audioSource.PlayOneShot(deathSFX);
 
         movementSpeed = 0;
 
         _boxCollider.enabled = false;
 
-        Destroy(gameObject, 1);
-
-        //_audioSource.clip = deathSFX;
-        //_audioSource.Play();   
+        Destroy(gameObject, 2f); 
     
     }
-}
+
+     void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.tag == "Win")
+        {
+            _bgmManagerScript.Win();
+            _audioSource.PlayOneShot(win);
+}   }

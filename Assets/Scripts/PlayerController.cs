@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private BGMManager _bgmManagerScript;
     public AudioClip win;
 }
+
     void Awake()
     {
         rBody2D = GetComponent<Rigidbody2D>();
@@ -81,12 +82,13 @@ public class PlayerController : MonoBehaviour
         rBody2D.linearVelocity = new Vector2(moveDirection.x * movementSpeed, rBody2D.linearVelocity.y);
     }
 
-    private void Bounce()
-    {
-        rBody2D.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
+    void Bounce()
+      {
+        rBody2D.linearVelocity = new Vector2(rBody2D.linearVelocity.x, 0);
+        rBody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
        } 
 
-    public void Mariodeath()
+    void Mariodeath()
     {
         _bgmManagerScript.StopBGM();
         

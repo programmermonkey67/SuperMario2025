@@ -1,39 +1,42 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+using System.Collections;
 public class PlayerController : MonoBehaviour
+
 {
     public Vector3 startPosition;
 
     public float movementSpeed = 5f;
-    public float jumpForce = 10;
+    public float jumpForce = 12;
     public float bounceForce = 4;
     public int direction = 1;
-    private AudioSource _audioSource;
-    private BoxCollider2D _boxCollider;
+
     public Vector3 initialPosition;
     public Vector3 finalPosition;
 
     private InputAction moveAction;
     public Vector2 moveDirection;
     private InputAction jumpAction;
-    public AudioClip deathSFX;
-    public AudioClip jumpSFX;
+
     public Rigidbody2D rBody2D;
     private SpriteRenderer render;
     private GroundSensor sensor;
     private Animator animator;
-    private BGMManager _bgmManagerScript;
-    public AudioClip win;
-}
-
-    void Awake()
+    public AudioClip die;
+    private AudioSource _audioSource;
+    private BoxCollider2D _boxCollider;
+    private Sceneloader _sceneloader;
+    public GameObject groundSensorObject;
+    public GameObject musica;
+  void Awake()
     {
         rBody2D = GetComponent<Rigidbody2D>();
         render = GetComponent<SpriteRenderer>();
         sensor = GetComponentInChildren<GroundSensor>();
         animator = GetComponent<Animator>();
         _audioSource = GetComponent<AudioSource>();
+        _boxCollider = GetComponent<BoxCollider2D>();
+        _sceneloader = GameObject.Find("SceneLoader").GetComponent<Sceneloader>();
 
         moveAction = InputSystem.actions["Move"];
         jumpAction = InputSystem.actions["Jump"];
@@ -44,15 +47,13 @@ public class PlayerController : MonoBehaviour
     {
         transform.position = new Vector3(0, 0, 0);
 
-        transform.position = startPosition;  
+        transform.position = startPosition;
     }
-
     // Update is called once per frame
     void Update()
     {
         moveDirection = moveAction.ReadValue<Vector2>();
-
-        if(moveDirection.x > 0)
+      if(moveDirection.x > 0)
         {
             render.flipX = false;
             animator.SetBool("IsRunning", true);
@@ -66,12 +67,11 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("IsRunning", false);
         }
-        
+
 
         if(jumpAction.WasPressedThisFrame() && sensor.isGrounded)
         {
             rBody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-            _audioSource.PlayOneShot(jumpSFX);
         }
 
         animator.SetBool("IsJumping", !sensor.isGrounded);
@@ -82,32 +82,33 @@ public class PlayerController : MonoBehaviour
         rBody2D.linearVelocity = new Vector2(moveDirection.x * movementSpeed, rBody2D.linearVelocity.y);
     }
 
-    void Bounce()
-      {
-        rBody2D.linearVelocity = new Vector2(rBody2D.linearVelocity.x, 0);
-        rBody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-       } 
-
-    void Mariodeath()
+    public void Bounce()
     {
-        _bgmManagerScript.StopBGM();
-        
+        rBody2D.AddForce(Vector2.up * bounceForce, ForceMode2D.Impulse);
+    }
+
+     public IEnumerator MarioDeath()
+    {
+
         animator.SetBool("IsDeath", true);
 
-        _audioSource.PlayOneShot(deathSFX);
+        Destroy(groundSensorObject);
+        Destroy(musica);
+
+
+
+        _audioSource.PlayOneShot(die);
 
         movementSpeed = 0;
 
         _boxCollider.enabled = false;
 
-        Destroy(gameObject, 2f); 
-    
-    }
 
-     void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.gameObject.tag == "Win")
-        {
-            _bgmManagerScript.Win();
-            _audioSource.PlayOneShot(win);
-}   }
+        Destroy(gameObject, 4);
+
+        yield return new WaitForSeconds(3);
+
+
+        _sceneloader.ChangeScene("muerte");
+    }
+}

@@ -11,7 +11,6 @@ public class Goomba : MonoBehaviour
 
     public float movementSpeed = 4;
     public int direction = 1;
-
     void Awake()
     {
         _rigidBody2D = GetComponent<Rigidbody2D>();
@@ -23,13 +22,13 @@ public class Goomba : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void FixedUpdate()
@@ -46,24 +45,21 @@ public class Goomba : MonoBehaviour
             direction *= -1;
         }
 
-        if(collision.gameObject.CompareTag("Player"))
+       if(collision.gameObject.tag == "Player")
         {
-            Destroy(collision.gameObject);
+            //Destroy(collision.gameObject);
+            PlayerController _enemyScript  = collision.gameObject.GetComponent<PlayerController>();
+
+            StartCoroutine(_enemyScript.MarioDeath());
+
+
         }
+
     }
 
-    void OnTriggerEnter2D(BoxCollider2D collider2D)
-    {
-        if(collider2D.gameObject.CompareTag("Tuberias"))
-        {
-            direction *= -1;
-        }
-    }
-    
     public void GoombaDeath()
     {
-        _gameManager.AddKill();
-        
+
         _audioSource.PlayOneShot(deathSFX);
 
         movementSpeed = 0;
@@ -73,6 +69,6 @@ public class Goomba : MonoBehaviour
         Destroy(gameObject, 1);
 
         //_audioSource.clip = deathSFX;
-        //_audioSource.Play();   
+        //_audioSource.Play();
     }
 }

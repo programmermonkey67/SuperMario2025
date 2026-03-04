@@ -12728,7 +12728,7 @@ Transform:
   m_GameObject: {fileID: 502591728}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -12.915704, y: -3.5042644, z: 0.0013290546}
+  m_LocalPosition: {x: -14.1, y: -2.55, z: 0.0013290546}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -12828,9 +12828,10 @@ MonoBehaviour:
   initialPosition: {x: 2, y: 3, z: 0}
   finalPosition: {x: 10, y: 3, z: 0}
   moveDirection: {x: 0, y: 0}
-  deathSFX: {fileID: 8300000, guid: 451ed21e65d4f52469f12624a9810f72, type: 3}
-  jumpSFX: {fileID: 8300000, guid: 9714fe983646a6540a51ced65e41daa8, type: 3}
   rBody2D: {fileID: 0}
+  die: {fileID: 0}
+  groundSensorObject: {fileID: 0}
+  musica: {fileID: 0}
 --- !u!95 &502591734
 Animator:
   serializedVersion: 7
